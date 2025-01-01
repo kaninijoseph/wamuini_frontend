@@ -1,0 +1,9 @@
+.wam__post {
+  align-content: center;
+}
+
+.wam__display-post {
+  align-items: center;
+  align-content: center;
+  margin: 1rem auto;
+}

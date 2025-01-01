@@ -1,0 +1,51 @@
+/* General Carousel Container Styles */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 8px; /* Adds rounded corners */
+}
+
+/* Slide Styles */
+.carousel-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ensures proper height adjustment */
+}
+
+/* Media Item Styles (Images and Videos) */
+.media-item {
+  max-width: 100%;
+  max-height: 75vh; /* Ensure it doesn't take too much vertical space */
+  object-fit: contain;
+  display: block;
+  border-radius: 8px; /* Matches container's rounded corners */
+}
+
+/* Navigation Dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background-color: #ccc;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: #333; /* Highlights the active dot */
+}
+
+/* Ensure the carousel does not interfere with the text container */
+.carousel-container + .post-text {
+  margin-top: 16px; /* Add space between the carousel and text container */
+}

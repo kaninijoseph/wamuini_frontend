@@ -1,0 +1,82 @@
+.wam__signup {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  position: relative;
+  margin: 3rem auto;
+
+  width: 500px;
+  border: #b0bec5 solid 2px;
+  border-radius: 10px;
+  justify-content: space-between;
+  padding-top: 2rem;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+input {
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+span {
+  color: red;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.wam__signup-names,
+.wam__signup-passwords {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+.wam__signup-names,
+.wam__signup-passwords,
+.wam__signup-email {
+  padding: 0 1rem;
+}
+
+.wam__signup button {
+  position: relative;
+  padding: 10px 5px;
+  margin-top: 2rem;
+  border-radius: 7px;
+  font-size: 18px;
+  color: black;
+  cursor: pointer;
+  width: 7rem;
+  left: 40%;
+}
+
+.wam__signup-conf_password-icon {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+}
+
+.wam__signup-password_icon {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+}
+
+.toggle-password {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .wam__signup-names,
+  .wam__signup-passwords {
+    display: flex;
+    flex-direction: row;
+  }
+}

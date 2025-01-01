@@ -1,0 +1,54 @@
+.wam__login {
+  display: flex;
+}
+
+.email,
+.password {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.wam__login-password_icon {
+  position: absolute;
+  right: 5%;
+  top: 30%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.button-container {
+  position: relative;
+  align-items: center;
+  padding: 1rem 0;
+}
+.wam__login-button {
+  display: flex;
+  padding: 7px 12px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 8px;
+
+  right: 40%;
+}
+
+p {
+  text-align: center;
+  margin: 0;
+}
+
+a {
+  color: green;
+}
+
+input {
+  padding: 7px 0;
+  font-size: 16px;
+  text-indent: 10px;
+}

@@ -1,0 +1,42 @@
+.wam__home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wam__home-about_us {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 1rem 2rem;
+}
+
+.wam__home-about_us-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.wam__home-about_us-img {
+  flex: 1;
+}
+.imgag {
+  max-width: 600px;
+  max-height: 450px;
+}
+
+.wam__home-about_us-messg {
+  flex: 1;
+  flex-direction: row;
+  font-size: 20px;
+}
+
+h4 {
+  font-size: 24px;
+}
+
+h2 {
+  font-size: 28px;
+}
