@@ -6,5 +6,6 @@ import thumb5 from "./thumb5.jpg";
 import imgA from "./imgA.jpg";
 import shore from "./shoreimg.jpg";
 import logo from "./logo.svg";
+import success from "./success.png";
 
-export { logo, thumb1, thumb2, thumb3, thumb4, thumb5, imgA, shore };
+export { success, logo, thumb1, thumb2, thumb3, thumb4, thumb5, imgA, shore };

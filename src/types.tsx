@@ -1,7 +1,7 @@
 // Define reusable types for Post, Comment, PostOwner, and PostContent
 
 export interface PostOwner {
-  dp: string;
+  // dp: string;
   name: string;
 }
 
@@ -20,9 +20,8 @@ export interface Comment {
 }
 
 export interface Post {
-  _id: string;
-  owner: PostOwner;
-  content: PostContent;
-  likes: string[];
-  comments: Comment[];
+  id: string;
+  name: string; // User's full name
+  text: string; // Post text conten
+  media: { type: "image" | "video"; path: string }[]; // Array of media objects (image or video)
 }

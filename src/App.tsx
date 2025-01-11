@@ -1,101 +1,95 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Navbar } from "./components";
-import { Home, Login, Market, Poster, SignUp } from "./containers";
-import WebSocketClient from "./websocket"; // Import the WebSocketClient
+import { Home, Login, Market, Poster, SignUp, EmailVerify } from "./containers";
 import { Post } from "./types"; // Importing shared types
+import { io, Socket } from "socket.io-client"; // Import socket.io-client
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const App: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const websocketClient = new WebSocketClient("ws://127.0.0.1:8080", 5); // Initialize WebSocket client with a retry limit
+  const [socket, setSocket] = useState<Socket | null>(null); // Manage socket connection
+  const [websocketConnected, setWebsocketConnected] = useState(false); // Track WebSocket connection status
 
-  useEffect(() => {
+  // Function to fetch initial posts from the server
+  const fetchPosts = async () => {
     const token = localStorage.getItem("WamuiniAppAuthToken");
 
-    // Function to fetch initial posts from the server
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/posts/fetch", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setPosts(data);
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-      }
-    };
+    try {
+      const response = await fetch("http://localhost:3000/api/posts/fetch", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-    fetchPosts(); // Fetch initial posts
-    websocketClient.connect(); // Connect to WebSocket server
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data);
+
+      const posts: Post[] = data.map((post: any) => ({
+        id: post.id,
+        name: post.name, // Extract name from user_id
+        text: post.text,
+        media: post.media,
+      }));
+
+      setPosts(posts);
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    }
+  };
+
+  // Fetch initial posts and manage WebSocket connection
+  useEffect(() => {
+    fetchPosts(); // Fetch posts
+
+    // Connect to the socket.io server
+    const socketInstance = io("http://localhost:3000", {
+      transports: ["websocket"], // Specify the transport to be WebSocket
+    });
+
+    setSocket(socketInstance);
 
     // WebSocket message handler
     const handleWebSocketMessage = (data: any) => {
-      if (data.type === "NEW_POST" || data.type === "UPDATE_POST") {
-        setPosts((prevPosts) => {
-          const updatedPosts = prevPosts.map((post) =>
-            post._id === data.post._id ? data.post : post
-          );
-          if (!prevPosts.find((post) => post._id === data.post._id)) {
-            updatedPosts.push(data.post);
-          }
-          return updatedPosts;
-        });
-      } else if (data.type === "UPDATE_LIKE_COUNT") {
+      if (data.type === "NEW_POST") {
+        setPosts((prevPosts) => [data.post, ...prevPosts]); // Add new post to the beginning
+      } else if (data.type === "UPDATE_POST") {
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
-            post._id === data.postId
-              ? { ...post, likes: Array(data.likeCount).fill("like") }
-              : post
+            post.id === data.post._id ? { ...post, ...data.post } : post
           )
         );
       }
     };
 
-    websocketClient.addMessageHandler(handleWebSocketMessage); // Add WebSocket message handler
+    // WebSocket connection status handlers
+    socketInstance.on("connect", () => {
+      console.log("WebSocket connected:", socketInstance.id);
+      setWebsocketConnected(true); // Set connection status to true
+    });
+
+    socketInstance.on("disconnect", () => {
+      console.log("WebSocket disconnected");
+      setWebsocketConnected(false); // Set connection status to false
+    });
+
+    // Listen to messages from the server
+    socketInstance.on("message", handleWebSocketMessage);
 
     // Cleanup: Remove message handler and disconnect WebSocket client
     return () => {
-      websocketClient.removeMessageHandler(handleWebSocketMessage);
-      websocketClient.disconnect();
+      socketInstance.off("message", handleWebSocketMessage); // Remove listener
+      socketInstance.disconnect(); // Disconnect from the server
+      console.log("WebSocket disconnected");
     };
   }, []);
-
-  // Function to update like count for a post
-  const updateLikeCount = (postId: string, likeCount: number) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post._id === postId
-          ? { ...post, likes: Array(likeCount).fill("like") }
-          : post
-      )
-    );
-  };
-
-  // Function to fetch comments for a post
-  const fetchComments = async (postId: string) => {
-    try {
-      const response = await fetch(`/api/posts/${postId}/comments`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch comments");
-      }
-      const comments = await response.json();
-
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post._id === postId ? { ...post, comments } : post
-        )
-      );
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-    }
-  };
 
   return (
     <div className="body">
@@ -107,14 +101,16 @@ const App: React.FC = () => {
           element={
             <Poster
               posts={posts}
-              updateLikeCount={updateLikeCount}
-              fetchComments={fetchComments}
+              fetchPosts={fetchPosts} // Pass fetchPosts function to Poster component
+              websocketConnected={websocketConnected} // Pass WebSocket status
             />
           }
         />
         <Route path="/market" element={<Market />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signUp" element={<SignUp />} />
+        <Route path="/api/users/:id/verify/:token" element={<EmailVerify />} />
+        <Route path="*" element={<h1>404 Page Not Found</h1>} />
       </Routes>
     </div>
   );

@@ -1,7 +1,17 @@
 import React from "react";
 
-function Button() {
-  return <div>Button</div>;
+interface ButtonProps {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
 }
+
+const Button: React.FC<ButtonProps> = ({ onClick, style, children }) => {
+  return (
+    <button onClick={onClick} style={style}>
+      {children}
+    </button>
+  );
+};
 
 export default Button;

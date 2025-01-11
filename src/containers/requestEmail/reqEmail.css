@@ -1,0 +1,36 @@
+.ptfl__reqemail {
+  display: flex;
+  place-items: center;
+}
+
+.ptfl__reqemail-container {
+  display: flex;
+  flex-direction: row;
+  place-items: center;
+  gap: 1rem;
+  max-width: 400px;
+  max-height: 300px;
+}
+
+.ptfl__reqemail-salutation {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  flex: 1;
+}
+
+.ptfl__reqemail-req {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  flex: 1;
+}
+
+.ptfl__reqemail-button {
+  place-items: center;
+  display: flex;
+}
